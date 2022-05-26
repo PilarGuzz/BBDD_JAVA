@@ -39,12 +39,12 @@ public class Conector {
 				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
 		
 		Statement st = connection.createStatement();
-		ResultSet resultSet = st.executeQuery("select p.codigo , p.status ,  CONCAT(c.nombre,c.apellido ),"
-				+ "COUNT(l.id),  SUM(l.precio)"
-				+ "from Linea l , Pedido p , Cliente "
-				+ "WHERE c.id = p.idCliente"
-				+ "AND p.id = l.idPedido "
-				+ "GROUP BY p.codigo , p.status , CONCAT(c.nombre, c.apellido )"
+		ResultSet resultSet = st.executeQuery("select p.codigo , p.status ,  CONCAT(c.nombre, \" \",c.apellido ),\n"
+				+ "COUNT(l.id),  SUM(l.precio)\n"
+				+ "from Linea l , Pedido p , Cliente c\n"
+				+ "WHERE c.id = p.idCliente \n"
+				+ "AND p.id = l.idPedido \n"
+				+ "GROUP BY p.codigo , p.status , CONCAT(c.nombre, \" \", c.apellido )\n"
 				+ "ORDER BY SUM(l.precio) DESC;");
 		System.out.println("Codigo , Status, Nombre Cliente, Num Productos, Importe");
 
@@ -59,37 +59,6 @@ public class Conector {
 		
 	}
 	
-	public void crearTXT() throws SQLException, IOException {
-		
-
-		Connection connection = 
-				DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
-		
-		Statement st = connection.createStatement();
-		ResultSet resultSet = st.executeQuery("select * from Cliente");
-		
-		
-		
-		File fichero = new File("./files/fichero.txt");
-		if (!fichero.exists()) {
-			fichero.createNewFile();
-			
-		}
-		PrintWriter p1 = new PrintWriter(fichero);
-		
-		while(resultSet.next()) {
-			System.out.println("Nombre , Apellidos, email, edad, Género");
-			System.out.println(resultSet.getString(2) + ", "
-							+ resultSet.getString(3)
-							+ ", " + resultSet.getString(4)
-							+ ", " + resultSet.getString(5)
-							+ ", " + resultSet.getString(6));
-		}
-		p1.close();
-
-	
-	}
 	
 	public void anadirCliente() throws SQLException {
 		
@@ -97,8 +66,56 @@ public class Conector {
 				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
 		
 		Statement st = connection.createStatement();
-		ResultSet resultSet = st.executeQuery("insert into Cliente "
+		st.executeUpdate("INSERT INTO Cliente (nombre, apellido, email, fechaNacimiento, genero) "
+				+ "VALUES ('Rigoberto', 'Ricciardiello', 'rr0@yelp.com', '1983-04-15', 'M');\n");
 		
+		System.out.println("Añadido");
+	}
+	
+	public void modificarCliente() throws SQLException {
+		
+		Connection connection = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
+		
+		Statement st = connection.createStatement();
+		st.executeUpdate("UPDATE Cliente SET genero = 'H' where nombre = 'Rigoberto'");
+		
+		System.out.println("modificado");
+	}
+	
+	public void eliminarCliente() throws SQLException {
+		
+		Connection connection = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
+		
+		Statement st = connection.createStatement();
+		st.executeUpdate("DELETE FROM Cliente where nombre = 'Rigoberto'");
+		
+		System.out.println("eliminado");
+	}
+	
+	public void anadirPedido() throws SQLException {
+		
+		Connection connection = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
+		
+		Statement st = connection.createStatement();
+		st.executeUpdate("insert into Pedido (codigo, status, idCliente) "
+				+ "values ('8572011999', 'ENVIADO', 185);");
+		
+		System.out.println("Añadido");
+	}
+	
+	public void anadirLineaPedido() throws SQLException {
+		
+		Connection connection = DriverManager.getConnection(
+				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
+		
+		Statement st = connection.createStatement();
+		st.executeUpdate("insert into Linea (codigo, nombreProducto, idPedido, cantidad, precio) "
+				+ "values ('49-833-6027', 'Oil - Hazelnut', 83, 7, 9.22);");
+		
+		System.out.println("Añadido");
 	}
 
 }
