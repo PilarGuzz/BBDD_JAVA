@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Conector {
 	
@@ -106,16 +108,35 @@ public class Conector {
 		System.out.println("Añadido");
 	}
 	
-	public void anadirLineaPedido() throws SQLException {
-		
-		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
-		
-		Statement st = connection.createStatement();
-		st.executeUpdate("insert into Linea (codigo, nombreProducto, idPedido, cantidad, precio) "
-				+ "values ('49-833-6027', 'Oil - Hazelnut', 83, 7, 9.22);");
-		
-		System.out.println("Añadido");
-	}
+	
+	public static void annadirLinea() throws SQLException {
+		Scanner sc = new Scanner(System.in);
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tienda", "root", "rootpass");
+		Statement statement=connection.createStatement();
+		ResultSet idLinea=statement.executeQuery("SELECT MAX(ID) FROM Pedido p WHERE status='PROCESANDO';");
+		idLinea.next();
+
+		PreparedStatement ps = connection.prepareStatement("INSERT INTO Linea (id, codigo, nombreProducto, idPedido, cantidad, precio) "
+		+ " VALUES (?, ?, ?, ?, ?, ?)");
+		System.out.println("Introduce id:");
+		String id=sc.nextLine();
+		System.out.println("Introduce codigo:");
+		String codigo=sc.nextLine();
+		System.out.println("Introduce nombre del producto:");
+		String nombre=sc.nextLine();
+		System.out.println("Introduce cantidad:");
+		String cantidad= sc.nextLine();
+		System.out.println("Introduce precio:");
+		String precio = sc.nextLine();
+
+
+		ps.setString(1, id);
+		ps.setString(2, codigo);
+		ps.setString(3, nombre);
+		ps.setString(4, idLinea.getString(1));
+		ps.setString(5, cantidad);
+		ps.setString(6, precio);
+		ps.executeUpdate();
+		}
 
 }

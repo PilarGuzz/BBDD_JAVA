@@ -5,15 +5,15 @@ import java.util.Scanner;
 import com.bd.Conector;
 
 public class Main {
-	public static final String MENU = "------------------MENU------------------"
-			+ "1. Mostrar información sobre los clientes."
-			+ "2. Mostrar pedidos"
-			+ "3. Añadir cliente"
-			+ "4. Actualizar un cliente existente"
-			+ "5. eliminar cliente"
-			+ "6. Añadir pedido"
-			+ "7. Incluir lineas"
-			+ "8. Salir";
+	public static final String MENU = "------------------MENU------------------ \n"
+			+ "1. Mostrar información sobre los clientes. \n"
+			+ "2. Mostrar pedidos\n"
+			+ "3. Añadir cliente\n"
+			+ "4. Actualizar un cliente existente\n"
+			+ "5. eliminar cliente\n"
+			+ "6. Añadir pedido\n"
+			+ "7. Incluir lineas\n"
+			+ "8. Salir\n";
 	
 	public static void main(String[] args) {
 		
@@ -45,7 +45,7 @@ public class Main {
 					new Conector().anadirPedido();
 				}else if(opcion == 7){
 					
-					new Conector().anadirLineaPedido();
+					new Conector().annadirLinea();
 				}else {
 					System.out.println("Error, inténtelo de nuevo");
 				}
